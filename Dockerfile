@@ -6,12 +6,11 @@
 #    By: awerebea <awerebea@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/07/12 19:07:36 by awerebea          #+#    #+#              #
-#    Updated: 2020/07/15 16:50:40 by awerebea         ###   ########.fr        #
+#    Updated: 2020/07/15 22:03:29 by awerebea         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 FROM debian:buster
-# SHELL ["/bin/bash", "-c"]
 
 	# update system components
 RUN apt-get update && apt-get -y upgrade \
@@ -59,7 +58,9 @@ RUN mv /config.inc.php /var/www/site/phpmyadmin/ \
 	# change directory permissions rwxr-xr-x
 &&	find /var/www/site/ -type d -exec chmod 755 {} \; \
 	# change files permissions rw-r--r--
-&&	find /var/www/site/ -type f -exec chmod 644 {} \;
+&&	find /var/www/site/ -type f -exec chmod 644 {} \; \
+	# make scripts executable
+&&	chmod +x ft_server_start.sh autoindex.sh
 
 # set ports on which a container listens for connections
 EXPOSE 80 443
