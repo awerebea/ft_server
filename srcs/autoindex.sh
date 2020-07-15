@@ -1,5 +1,5 @@
 #! /bin/bash
-site_conf='/etc/nginx/sites-available/ft_server_site'
+site_conf='/etc/nginx/sites-available/site'
 ind_off='autoindex off'
 ind_on='autoindex on'
 

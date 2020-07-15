@@ -24,21 +24,21 @@ RUN apt-get update && apt-get -y upgrade \
 	php-mysql \
 	wget
 
-
-RUN	wget -c https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-english.tar.xz \
-&&	mkdir /var/www/ft_server_site && mkdir /var/www/ft_server_site/phpmyadmin \
-&&	tar -xvf phpMyAdmin-latest-english.tar.xz --strip-components 1 -C /var/www/ft_server_site/phpmyadmin \
+	# add phpMyAdmin
+RUN wget -c https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-english.tar.xz \
+&&	mkdir /var/www/site && mkdir /var/www/site/phpmyadmin \
+&&	tar -xvf phpMyAdmin-latest-english.tar.xz --strip-components 1 -C /var/www/site/phpmyadmin \
 	# add WordPress
 &&	wget -c https://wordpress.org/latest.tar.gz \
 &&	tar -xvf latest.tar.gz \
-&&	mv wordpress/ /var/www/ft_server_site/ \
+&&	mv wordpress/ /var/www/site/ \
 	# remove unused more downloaded archives
 &&	rm -f phpMyAdmin-latest-english.tar.xz \
 &&	rm -f latest.tar.gz \
 	# generate ssl certificate and key
 &&	mkdir /etc/nginx/ssl \
-&&	openssl req -newkey rsa:2048 -x509 -sha256 -days 30 -nodes -out /etc/nginx/ssl/ft_server_site.crt -keyout /etc/nginx/ssl/ft_server_site.key \
-	-subj "/C=RU/ST=Tatarstan/L=Kazan/O=School 21/OU=awerebea/CN=ft_server_site"
+&&	openssl req -newkey rsa:2048 -x509 -sha256 -days 30 -nodes -out /etc/nginx/ssl/site.crt -keyout /etc/nginx/ssl/site.key \
+	-subj "/C=RU/ST=Tatarstan/L=Kazan/O=School 21/OU=awerebea/CN=ft_server"
 
 	# copy requered sources in container
 COPY /srcs/config.inc.php \
@@ -49,19 +49,19 @@ COPY /srcs/config.inc.php \
 	/srcs/autoindex.sh ./
 
 	# move config-files
-RUN mv /config.inc.php /var/www/ft_server_site/phpmyadmin/ \
-&&	mv /nginx.conf /etc/nginx/sites-available/ft_server_site \
-&&	mv /wp-config.php /var/www/ft_server_site/wordpress/ \
+RUN mv /config.inc.php /var/www/site/phpmyadmin/ \
+&&	mv /nginx.conf /etc/nginx/sites-available/site \
+&&	mv /wp-config.php /var/www/site/wordpress/ \
 	# enable nginx site configuration
-&&	ln -s /etc/nginx/sites-available/ft_server_site /etc/nginx/sites-enabled/ \
+&&	ln -s /etc/nginx/sites-available/site /etc/nginx/sites-enabled/ \
 	# remove unused nginx default configuration
 &&	rm -f /etc/nginx/sites-enabled/default \
 	# let web services be owner of site's root directory (to have access to it's files) 
-&&	chown -R www-data:www-data /var/www/ft_server_site \
+&&	chown -R www-data:www-data /var/www/site \
 	# change directory permissions rwxr-xr-x
-&&	find /var/www/ft_server_site/ -type d -exec chmod 755 {} \; \
+&&	find /var/www/site/ -type d -exec chmod 755 {} \; \
 	# change files permissions rw-r--r--
-&&	find /var/www/ft_server_site/ -type f -exec chmod 644 {} \;
+&&	find /var/www/site/ -type f -exec chmod 644 {} \;
 
 # set ports on which a container listens for connections
 EXPOSE 80 443
