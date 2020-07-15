@@ -6,7 +6,7 @@
 #    By: awerebea <awerebea@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/07/12 19:07:36 by awerebea          #+#    #+#              #
-#    Updated: 2020/07/15 02:59:18 by awerebea         ###   ########.fr        #
+#    Updated: 2020/07/15 15:39:44 by awerebea         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,7 @@ RUN apt-get update && apt-get -y upgrade \
 
 	# add phpMyAdmin
 RUN wget -c https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-english.tar.xz \
-&&	mkdir /var/www/site && mkdir /var/www/site/phpmyadmin \
+&&	mkdir /var/www/site /var/www/site/phpmyadmin /var/www/site/phpmyadmin/tmp \
 &&	tar -xvf phpMyAdmin-latest-english.tar.xz --strip-components 1 -C /var/www/site/phpmyadmin \
 	# add WordPress
 &&	wget -c https://wordpress.org/latest.tar.gz \
@@ -42,7 +42,6 @@ RUN wget -c https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-english.tar.x
 
 	# copy requered sources in container
 COPY /srcs/config.inc.php \
-	/srcs/mysql.conf.sql \
 	/srcs/nginx.conf \
 	/srcs/wp-config.php \
 	/srcs/ft_server_start.sh \
@@ -56,7 +55,7 @@ RUN mv /config.inc.php /var/www/site/phpmyadmin/ \
 &&	ln -s /etc/nginx/sites-available/site /etc/nginx/sites-enabled/ \
 	# remove unused nginx default configuration
 &&	rm -f /etc/nginx/sites-enabled/default \
-	# let web services be owner of site's root directory (to have access to it's files) 
+	# let web services be owner of site's root directory (to have access to it's files)
 &&	chown -R www-data:www-data /var/www/site \
 	# change directory permissions rwxr-xr-x
 &&	find /var/www/site/ -type d -exec chmod 755 {} \; \
