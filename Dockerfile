@@ -6,7 +6,7 @@
 #    By: awerebea <awerebea@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/07/12 19:07:36 by awerebea          #+#    #+#              #
-#    Updated: 2020/07/15 15:39:44 by awerebea         ###   ########.fr        #
+#    Updated: 2020/07/15 16:50:40 by awerebea         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,8 +30,7 @@ RUN wget -c https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-english.tar.x
 &&	tar -xvf phpMyAdmin-latest-english.tar.xz --strip-components 1 -C /var/www/site/phpmyadmin \
 	# add WordPress
 &&	wget -c https://wordpress.org/latest.tar.gz \
-&&	tar -xvf latest.tar.gz \
-&&	mv wordpress/ /var/www/site/ \
+&&	tar -xvf latest.tar.gz --strip-components 1 -C /var/www/site \
 	# remove unused more downloaded archives
 &&	rm -f phpMyAdmin-latest-english.tar.xz \
 &&	rm -f latest.tar.gz \
@@ -50,7 +49,7 @@ COPY /srcs/config.inc.php \
 	# move config-files
 RUN mv /config.inc.php /var/www/site/phpmyadmin/ \
 &&	mv /nginx.conf /etc/nginx/sites-available/site \
-&&	mv /wp-config.php /var/www/site/wordpress/ \
+&&	mv /wp-config.php /var/www/site/ \
 	# enable nginx site configuration
 &&	ln -s /etc/nginx/sites-available/site /etc/nginx/sites-enabled/ \
 	# remove unused nginx default configuration
